@@ -18,10 +18,10 @@ extension MTKView : RenderDestinationProvider {
 }
 
 class ViewController: UIViewController, MTKViewDelegate, ARSessionDelegate {
-    
+
     let DEBUG = true
-    let DEFAULT_URL = "https://outpost-web.herokuapp.com/"
-    let DEV_URL = "https://8d75ae0e.ngrok.io/"
+    let DEFAULT_URL = "https://outpost-social.herokuapp.com/"
+    let DEV_URL = "https://5cc0efa1.ngrok.io"
     
     var webView:WKWebView!
     
@@ -60,6 +60,8 @@ class ViewController: UIViewController, MTKViewDelegate, ARSessionDelegate {
             webView.isOpaque = false
             webView.backgroundColor = UIColor.clear
             webView.scrollView.backgroundColor = UIColor.clear
+            //webView.scrollView.isScrollEnabled = false
+            //webView.scrollView.bounces = false
             webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             
             //Add as subview to MTKView
@@ -175,19 +177,20 @@ class ViewController: UIViewController, MTKViewDelegate, ARSessionDelegate {
             let viewMatrixAsArray = self.Float4x4ToArray(matrix: simd_inverse(viewMatrix))
             let projectionMatrixAsArray = self.Float4x4ToArray(matrix: projectionMatrix)
             
-            let serializedViewMatrix = self.serializeMatrix(matrixToSerialize:(viewMatrix))
-            let serializedProjectionMatrix = self.serializeMatrix(matrixToSerialize: projectionMatrix)
+            //let serializedViewMatrix = self.serializeMatrix(matrixToSerialize:(viewMatrix))
+            //let serializedProjectionMatrix = self.serializeMatrix(matrixToSerialize: projectionMatrix)
             
             let lightEstimate = frame.lightEstimate
             
             if(lightEstimate != nil){
                 let ambient:Float = Float(lightEstimate!.ambientIntensity/1000.0)
-                //let temperature = lightEstimate!.ambientColorTemperature
+                let temperature = lightEstimate!.ambientColorTemperature
                 
                 self.webView.evaluateJavaScript("ambientLightUpdate('\(ambient)');", completionHandler: { (result, error) in
                     print("Light estimate updated")
                 });
             }
+            
             
            
             
